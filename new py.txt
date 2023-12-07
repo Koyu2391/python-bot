@@ -1,0 +1,22 @@
+intents = nextcord.Intents.default()
+intents.typing = False
+intents.presences = False
+
+class MyClient(nextcord.Client):
+    async def on_ready(self):
+        print(f'Logged on as {self.user}!')
+        
+    async def on_message(self, message):
+        print(f'Message from {message.author}: {message.content}')
+        
+        if message.author == client.user:
+            return
+
+        if message.content.startswith('_hello'):
+            await message.channel.send('Hello! I am a bot under development by koyu')
+
+intents = nextcord.Intents.default()
+intents.message_content = True
+
+
+client = MyClient(intents=intents)

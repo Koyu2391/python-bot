@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background-color: black;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      display: flex;
+      gap: 40px;
+    }
+
+    .light-bulb {
+      width: 50px;
+      height: 80px;
+      background-color: #333;
+      border-radius: 50% 50% 0 0;
+      position: relative;
+      cursor: pointer;
+      margin: 0 20px;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+      transition: box-shadow 0.3s ease-in-out, background-color 0.3s ease-in-out;
+      animation: glowAnimation 0.3s infinite alternate-reverse;
+    }
+
+    .light-bulb::before {
+      content: "";
+      width: 20px;
+      height: 20px;
+      background-color: #fff;
+      border-radius: 50%;
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0; /* Initially not visible */
+      box-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    .light-bulb.active::before {
+      opacity: 1;
+    }
+
+    .light-bulb.active {
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+      background-color: rgb(255, 240, 154);
+      animation: none; /* Disable the glow animation when active */
+    }
+
+    .button-container {
+      display: flex;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .bulb-button {
+      padding: 10px;
+      background-color: #353535;
+      /* Grey background */
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease-in-out;
+    }
+
+    .bulb-button:hover {
+      background-color: #444;
+      /* Darker grey on hover */
+    }
+
+    .input-container {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .decimal-input {
+      margin-bottom: 10px;
+      padding: 5px;
+      width: 100px;
+      color: black; /* Ensure text color is black */
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container" id="bulbContainer">
+    <!-- Initialize with 8 bulbs -->
+    <div class="light-bulb" onclick="toggleGlow(this)"></div>
+    <div class="light-bulb" onclick="toggleGlow(this)"></div>
+    <div class="light-bulb" onclick="toggleGlow(this)"></div>
+    <div class="light-bulb" onclick="toggleGlow(this)"></div>
+    <div class="light-bulb" onclick="toggleGlow(this)"></div>
+    <div class="light-bulb" onclick="toggleGlow(this)"></div>
+    <div class="light-bulb" onclick="toggleGlow(this)"></div>
+    <div class="light-bulb" onclick="toggleGlow(this)"></div>
+  </div>
+
+  <div class="input-container">
+    <input type="number" class="decimal-input" placeholder="Enter Decimal" oninput="updateBinary(this.value)">
+  </div>
+
+  <div class="button-container">
+    <button class="bulb-button" onclick="addBulb()">Add Bulb</button>
+    <button class="bulb-button" onclick="removeBulb()">Remove Bulb</button>
+  </div>
+
+  <script>
+    function addBulb() {
+      const bulbContainer = document.getElementById('bulbContainer');
+      const newBulb = document.createElement('div');
+      newBulb.className = 'light-bulb';
+      newBulb.onclick = function () { toggleGlow(this); };
+      bulbContainer.appendChild(newBulb);
+    }
+
+    function removeBulb() {
+      const bulbContainer = document.getElementById('bulbContainer');
+      const bulbs = bulbContainer.getElementsByClassName('light-bulb');
+      if (bulbs.length > 0) {
+        bulbContainer.removeChild(bulbs[bulbs.length - 1]);
+      }
+    }
+
+    function toggleGlow(bulb) {
+      bulb.classList.toggle('active');
+    }
+
+    function updateBinary(decimal) {
+      const binaryRepresentation = decimalToBinary(decimal);
+      const binaryArray = binaryRepresentation.split(''); // Remove the reverse since we want leading zeros
+
+      const bulbs = document.getElementsByClassName('light-bulb');
+      for (let i = 0; i < bulbs.length; i++) {
+        if (i < binaryArray.length) {
+          bulbs[i].classList.toggle('active', binaryArray[i] === '1');
+        } else {
+          bulbs[i].classList.remove('active');
+        }
+      }
+    }
+
+    function decimalToBinary(decimal) {
+      return (decimal >>> 0).toString(2).padStart(8, '0'); // Pad with leading zeros to ensure 8 bits
+    }
+
+    // Your existing JavaScript code
+    function glowAnimation() {
+      // Animation logic for existing glowAnimation
+    }
+  </script>
+</body>
+
+</html>
